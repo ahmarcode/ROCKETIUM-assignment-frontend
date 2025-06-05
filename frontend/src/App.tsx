@@ -1,10 +1,16 @@
 import { useState } from "react";
-import "./App.css";
 import InitCanvasForm from "./components/InitCanvasForm";
+import CanvasBoard from "./components/CanvasBoard";
+import CanvasControls from "./components/CanvasControls";
+import ExportButton from "./components/ExportButton";
 
 function App() {
   const [canvasReady, setCanvasReady] = useState(false);
   const [canvasData, setCanvasData] = useState({ width: 0, height: 0 });
+  const [refreshTrigger, setRefreshTrigger] = useState(0); // trigger for re-fetching image
+
+  const triggerRefresh = () => setRefreshTrigger((prev) => prev + 1);
+
   return (
     <>
       {!canvasReady ? (
@@ -14,12 +20,12 @@ function App() {
         />
       ) : (
         <div>
-          <h2 className="text-4xl mb-8">Canvas Initialized</h2>
-          <canvas
-            width={canvasData.width}
-            height={canvasData.height}
-            className="border border-gray-300"
-          ></canvas>
+          <CanvasControls
+            canvasData={canvasData}
+            onUpdate={triggerRefresh} 
+          />
+          <CanvasBoard refreshTrigger={refreshTrigger} />
+          <ExportButton />
         </div>
       )}
     </>
