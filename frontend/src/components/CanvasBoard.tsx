@@ -25,9 +25,9 @@ export default function CanvasBoard({
 
   return (
     <img
-      src={imageSrc}
-      alt="Canvas preview"
-      style={{ border: "1px solid #ccc", marginTop: "20px" }}
-    />
+  src={imageSrc}
+  alt="Canvas preview"
+  style={{ border: "1px solid #ccc", marginTop: "20px", padding: "10px" }}
+/>
   );
 }
