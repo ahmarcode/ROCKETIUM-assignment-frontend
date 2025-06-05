@@ -6,10 +6,11 @@ import {
   redoCanvas,
   undoCanvas,
   uploadImageToCanvas,
+  clearCanvas,
 } from "../api/canvas";
+import ExportButton from "./ExportButton";
 
 export default function CanvasControls({ canvasData, onUpdate }) {
-  // Shape states
   const [shapeType, setShapeType] = useState("rectangle");
   const [x, setX] = useState(10);
   const [y, setY] = useState(10);
@@ -18,16 +19,13 @@ export default function CanvasControls({ canvasData, onUpdate }) {
   const [radius, setRadius] = useState(25);
   const [color, setColor] = useState("#000000");
 
-  // Text states
   const [text, setText] = useState("Hello");
   const [fontSize, setFontSize] = useState(20);
 
-  // Image by URL states
   const [imageUrl, setImageUrl] = useState("");
   const [imgWidth, setImgWidth] = useState(100);
   const [imgHeight, setImgHeight] = useState(100);
 
-  // Upload image states
   const [uploadFile, setUploadFile] = useState(null);
   const [uploadX, setUploadX] = useState(10);
   const [uploadY, setUploadY] = useState(10);
@@ -67,7 +65,13 @@ export default function CanvasControls({ canvasData, onUpdate }) {
     e.preventDefault();
     if (!imageUrl) return alert("Please enter an image URL");
     try {
-      const result = await addImageToCanvas(imageUrl, x, y, imgWidth, imgHeight);
+      const result = await addImageToCanvas(
+        imageUrl,
+        x,
+        y,
+        imgWidth,
+        imgHeight
+      );
       console.log("Image added:", result);
       onUpdate();
     } catch (error) {
@@ -186,7 +190,10 @@ export default function CanvasControls({ canvasData, onUpdate }) {
       </div>
 
       {/* Text Controls */}
-      <form onSubmit={addTextHandler} className="flex flex-wrap gap-4 items-center">
+      <form
+        onSubmit={addTextHandler}
+        className="flex flex-wrap gap-4 items-center"
+      >
         <label>
           Text:
           <input
@@ -226,7 +233,10 @@ export default function CanvasControls({ canvasData, onUpdate }) {
       </form>
 
       {/* Image by URL Controls */}
-      <form onSubmit={addImageHandler} className="flex flex-wrap gap-4 items-center">
+      <form
+        onSubmit={addImageHandler}
+        className="flex flex-wrap gap-4 items-center"
+      >
         <label>
           Image URL:
           <input
@@ -267,7 +277,10 @@ export default function CanvasControls({ canvasData, onUpdate }) {
       </form>
 
       {/* Upload Image from File */}
-      <form onSubmit={handleUploadImage} className="flex flex-wrap gap-4 items-center">
+      <form
+        onSubmit={handleUploadImage}
+        className="flex flex-wrap gap-4 items-center"
+      >
         <input
           type="file"
           accept="image/*"
@@ -323,7 +336,6 @@ export default function CanvasControls({ canvasData, onUpdate }) {
         </button>
       </form>
 
-      {/* Undo / Redo */}
       <div className="flex gap-4">
         <button
           onClick={async (e) => {
@@ -354,7 +366,23 @@ export default function CanvasControls({ canvasData, onUpdate }) {
         >
           Redo
         </button>
+
+        <button
+          onClick={async (e) => {
+            e.preventDefault();
+            try {
+              await clearCanvas();
+              onUpdate();
+            } catch (err) {
+              console.error("Reset failed:", err);
+            }
+          }}
+          className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800"
+        >
+          Reset Canvas
+        </button>
       </div>
+      <ExportButton />
     </div>
   );
 }

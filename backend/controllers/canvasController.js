@@ -10,7 +10,7 @@ let canvasHistory = [];
 let redoStack = [];
 
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" }); // temporary folder to store files
+const upload = multer({ dest: "uploads/" }); 
 
 exports.initCanvas = (req, res) => {
   const { width, height } = req.body;
@@ -47,34 +47,28 @@ exports.uploadFileToCanvas = async (req, res) => {
     return res.status(400).json({ message: "No file uploaded" });
   }
 
-  // Parse coordinates & dimensions from req.body (strings)
   const x = parseInt(req.body.x, 10);
   const y = parseInt(req.body.y, 10);
   const width = req.body.width ? parseInt(req.body.width, 10) : null;
   const height = req.body.height ? parseInt(req.body.height, 10) : null;
 
-  // Validate coordinates
   if (isNaN(x) || isNaN(y)) {
     return res.status(400).json({ message: "Invalid or missing coordinates" });
   }
 
   try {
-    // Use file.path directly (multer gives the relative path)
     const img = await loadImage(file.path);
 
     const drawWidth = width || img.width;
     const drawHeight = height || img.height;
 
-    // Save current canvas state for undo
     canvasHistory.push(
       context.getImageData(0, 0, canvasInstance.width, canvasInstance.height)
     );
     redoStack = [];
 
-    // Draw uploaded image to canvas
     context.drawImage(img, x, y, drawWidth, drawHeight);
 
-    // Clean up temp file
     fs.unlink(file.path, (err) => {
       if (err) console.error("Failed to delete temp image:", err);
     });
@@ -199,12 +193,11 @@ exports.exportToPDF = (req, res) => {
       if (err) {
         console.error("Error sending file:", err);
       }
-      fs.unlink(tempPath, () => {}); // Clean temp file after download
+      fs.unlink(tempPath, () => {});
     });
   });
 };
 
-// Undo example
 exports.undoCanvas = (req, res) => {
   if (!canvasInstance || !context) {
     return res.status(400).json({ message: "Canvas not initialized yet" });
@@ -214,12 +207,10 @@ exports.undoCanvas = (req, res) => {
   }
 
   try {
-    // Save current canvas to redo stack before undoing
     redoStack.push(
       context.getImageData(0, 0, canvasInstance.width, canvasInstance.height)
     );
 
-    // Restore last state from canvasHistory
     const lastState = canvasHistory.pop();
     context.putImageData(lastState, 0, 0);
 
@@ -229,7 +220,6 @@ exports.undoCanvas = (req, res) => {
   }
 };
 
-// Redo example
 exports.redoCanvas = (req, res) => {
   if (!canvasInstance || !context) {
     return res.status(400).json({ message: "Canvas not initialized yet" });
@@ -239,17 +229,34 @@ exports.redoCanvas = (req, res) => {
   }
 
   try {
-    // Save current canvas to history before redoing
     canvasHistory.push(
       context.getImageData(0, 0, canvasInstance.width, canvasInstance.height)
     );
 
-    // Restore last state from redoStack
     const redoState = redoStack.pop();
     context.putImageData(redoState, 0, 0);
 
     res.status(200).json({ message: "Redo successful" });
   } catch (err) {
     res.status(500).json({ message: "Redo failed", error: err.message });
+  }
+};
+
+exports.resetCanvas = (req, res) => {
+  if (!canvasInstance || !context) {
+    return res.status(400).json({ message: "Canvas not initialized yet" });
+  }
+
+  try {
+    canvasHistory.push(
+      context.getImageData(0, 0, canvasInstance.width, canvasInstance.height)
+    );
+    redoStack = [];
+
+    context.clearRect(0, 0, canvasInstance.width, canvasInstance.height);
+
+    res.status(200).json({ message: "Canvas reset successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to reset canvas", error: err.message });
   }
 };

@@ -13,6 +13,7 @@ router.post("/add-image", canvasController.addImage);
 router.post("/undo", canvasController.undoCanvas);
 router.post("/redo", canvasController.redoCanvas);
 router.post("/upload-image", upload.single("file"), canvasController.uploadFileToCanvas);
+router.post("/reset", canvasController.resetCanvas);
 
 
 module.exports = router;

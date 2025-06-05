@@ -129,3 +129,9 @@ export async function uploadImageToCanvas(
     throw error;
   }
 }
+
+export async function clearCanvas(): Promise<void> {
+  const response = await axios.post(`${API_BASE_URL}/canvas/reset`);
+  return response.data;
+}
+

@@ -7,7 +7,7 @@ import ExportButton from "./components/ExportButton";
 function App() {
   const [canvasReady, setCanvasReady] = useState(false);
   const [canvasData, setCanvasData] = useState({ width: 0, height: 0 });
-  const [refreshTrigger, setRefreshTrigger] = useState(0); // trigger for re-fetching image
+  const [refreshTrigger, setRefreshTrigger] = useState(0); 
 
   const triggerRefresh = () => setRefreshTrigger((prev) => prev + 1);
 
@@ -25,7 +25,6 @@ function App() {
             onUpdate={triggerRefresh} 
           />
           <CanvasBoard refreshTrigger={refreshTrigger} />
-          <ExportButton />
         </div>
       )}
     </>
