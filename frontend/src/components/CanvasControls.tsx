@@ -16,8 +16,8 @@ interface CanvasControlsProps {
 
 export default function CanvasControls({ onUpdate }: CanvasControlsProps) {
   const [shapeType, setShapeType] = useState("rectangle");
-  const [x, setX] = useState(10);
-  const [y, setY] = useState(10);
+  const [x, setX] = useState(25);
+  const [y, setY] = useState(25);
   const [width, setWidth] = useState(50);
   const [height, setHeight] = useState(50);
   const [radius, setRadius] = useState(25);
