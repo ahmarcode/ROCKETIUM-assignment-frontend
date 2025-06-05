@@ -88,7 +88,7 @@ export async function addImageToCanvas(
   height?: number
 ): Promise<{ message: string }> {
   try {
-    const response = await axios.post(`${API_BASE_URL}/canvas/upload-image`, {
+    const response = await axios.post(`${API_BASE_URL}/canvas/add-image`, {
       imageUrl,
       x,
       y,
