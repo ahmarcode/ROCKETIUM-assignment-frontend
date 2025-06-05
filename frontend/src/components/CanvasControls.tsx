@@ -10,7 +10,11 @@ import {
 } from "../api/canvas";
 import ExportButton from "./ExportButton";
 
-export default function CanvasControls({ canvasData, onUpdate }) {
+interface CanvasControlsProps {
+  onUpdate: () => void;
+}
+
+export default function CanvasControls({ onUpdate }: CanvasControlsProps) {
   const [shapeType, setShapeType] = useState("rectangle");
   const [x, setX] = useState(10);
   const [y, setY] = useState(10);
@@ -26,13 +30,14 @@ export default function CanvasControls({ canvasData, onUpdate }) {
   const [imgWidth, setImgWidth] = useState(100);
   const [imgHeight, setImgHeight] = useState(100);
 
-  const [uploadFile, setUploadFile] = useState(null);
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
+
   const [uploadX, setUploadX] = useState(10);
   const [uploadY, setUploadY] = useState(10);
   const [uploadWidth, setUploadWidth] = useState(100);
   const [uploadHeight, setUploadHeight] = useState(100);
 
-  const addShapeHandler = async (type) => {
+  const addShapeHandler = async (type: string) => {
     try {
       const result = await addShapeToCanvas(
         type,
@@ -50,7 +55,7 @@ export default function CanvasControls({ canvasData, onUpdate }) {
     }
   };
 
-  const addTextHandler = async (e) => {
+  const addTextHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const result = await addTextToCanvas(text, x, y, fontSize, color);
@@ -61,7 +66,7 @@ export default function CanvasControls({ canvasData, onUpdate }) {
     }
   };
 
-  const addImageHandler = async (e) => {
+  const addImageHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!imageUrl) return alert("Please enter an image URL");
     try {
@@ -79,7 +84,7 @@ export default function CanvasControls({ canvasData, onUpdate }) {
     }
   };
 
-  const handleUploadImage = async (e) => {
+  const handleUploadImage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!uploadFile) return alert("Please select a file to upload");
 

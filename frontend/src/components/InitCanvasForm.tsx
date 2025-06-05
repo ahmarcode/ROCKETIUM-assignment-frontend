@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { initializeCanvas } from "../api/canvas";
 
-export default function InitCanvasForm({setCanvasData, setCanvasReady}) {
+interface CanvasControlsProps {
+  setCanvasData: (data: { width: number; height: number }) => void;
+  setCanvasReady: (ready: boolean) => void;
+}
+
+export default function InitCanvasForm({setCanvasData, setCanvasReady}: CanvasControlsProps) {
   const [canvasWidth, setCanvasWidth] = useState(0);
   const [canvasHeight, setCanvasHeight] = useState(0);
 
 
-  const GenerateCanvasHandler = async (e) => {
+  const GenerateCanvasHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (canvasWidth > 0 && canvasHeight > 0) {
       try {
@@ -23,7 +28,7 @@ export default function InitCanvasForm({setCanvasData, setCanvasReady}) {
   };
   return (
     <>
-        <form className="flex flex-col items-center  justify-center h-screen bg-gray-100">
+        <form onSubmit={GenerateCanvasHandler} className="flex flex-col items-center  justify-center h-screen bg-gray-100">
           <div>
             <h2 className="text-4xl mb-8">Canvas Initialization Form</h2>
             <div className="flex gap-4 mb-4">
@@ -50,9 +55,6 @@ export default function InitCanvasForm({setCanvasData, setCanvasReady}) {
               <button
                 type="submit"
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                onClick={(e) => {
-                  GenerateCanvasHandler(e);
-                }}
               >
                 Generate Canvas
               </button>
