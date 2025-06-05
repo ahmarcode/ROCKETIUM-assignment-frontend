@@ -209,6 +209,26 @@ export default function CanvasControls({ onUpdate }: CanvasControlsProps) {
           />
         </label>
 
+         <label>
+          X:
+          <input
+            type="number"
+            value={x}
+            onChange={(e) => setX(Number(e.target.value))}
+            className="ml-1 border rounded px-2 py-1 w-16"
+          />
+        </label>
+
+        <label>
+          Y:
+          <input
+            type="number"
+            value={y}
+            onChange={(e) => setY(Number(e.target.value))}
+            className="ml-1 border rounded px-2 py-1 w-16"
+          />
+        </label>
+
         <label>
           Font Size:
           <input
